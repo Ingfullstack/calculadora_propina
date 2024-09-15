@@ -1,13 +1,14 @@
+import { useReducer } from "react";
 import MenuItem from "./components/MenuItem";
 import OrdenContenido from "./components/OrdenContenido";
 import OrdenTotal from "./components/OrdenTotal";
 import TipPorcentageForm from "./components/TipPorcentageForm";
 import { menuItems } from "./data/db";
-import useOrden from "./hooks/useOrden";
+import { initialState, useOrdenReducer } from "./hooks/useOrdenReducer";
 
 function App() {
 
-  const { orden, handleAgregar, handleEliminarOrden, tip, setTip, vaciarOrden } = useOrden();
+  const [state, dispatch] = useReducer(useOrdenReducer, initialState);
 
   return (
     <>
@@ -21,13 +22,13 @@ function App() {
         <div className="mx-5">
           <h2 className="text-3xl font-black uppercase mb-5">Menu</h2>
           { menuItems.map((item) => (
-            <MenuItem key={item.id} item={ item } handleAgregar={ handleAgregar }/>
+            <MenuItem key={item.id} item={ item } dispatch={ dispatch }/>
           ))}
         </div>
         <div className="mx-5">
-          <OrdenContenido orden={ orden } handleEliminarOrden={ handleEliminarOrden } />
-          <TipPorcentageForm setTip={ setTip } tip={ tip }/>
-          <OrdenTotal orden={ orden } tip={ tip } vaciarOrden={ vaciarOrden }/>
+          <OrdenContenido state={ state.orden } dispatch={ dispatch } />
+          <TipPorcentageForm dispatch={ dispatch } state={ state.tip }/>
+          <OrdenTotal orden={ state.orden } state={ state.tip } dispatch={ dispatch }/>
         </div>
       </main>
     </>

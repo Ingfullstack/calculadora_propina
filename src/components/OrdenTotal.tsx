@@ -1,17 +1,18 @@
-import { useMemo } from "react"
+import { Dispatch, useMemo } from "react"
 import { OrdenItem } from "../types"
+import { OrdenAction } from "../hooks/useOrdenReducer"
 
 type OrdenTotalProps = {
     orden: OrdenItem[]
-    tip: number
-    vaciarOrden: () => void
+    state: number
+    dispatch: Dispatch<OrdenAction>
 }
 
-export default function OrdenTotal({ orden, tip, vaciarOrden }: OrdenTotalProps) {
+export default function OrdenTotal({ orden, state, dispatch }: OrdenTotalProps) {
 
     const subtotal = useMemo(() => orden.reduce((total,item) => total + ( item.cantidad * item.price), 0), [orden])
-    const propina = useMemo(() => subtotal * tip,[orden,tip])
-    const total = useMemo(() => subtotal + propina ,[orden, tip]);
+    const propina = useMemo(() => subtotal * state,[orden,state])
+    const total = useMemo(() => subtotal + propina ,[orden, state]);
 
   return (
     <>
@@ -29,7 +30,7 @@ export default function OrdenTotal({ orden, tip, vaciarOrden }: OrdenTotalProps)
                 <span className="font-bold">${ total }</span>
             </p>
 
-            <button onClick={ vaciarOrden } disabled={ total === 0} className="disabled:opacity-10 bg-black w-full p-2 mt-5 text-white font-bold uppercase">Vaciar Orden</button>
+            <button onClick={ () => dispatch({ type: "remover-orden" }) } disabled={ total === 0} className="disabled:opacity-10 bg-black w-full p-2 mt-5 text-white font-bold uppercase">Vaciar Orden</button>
         </div>
     </>
   )

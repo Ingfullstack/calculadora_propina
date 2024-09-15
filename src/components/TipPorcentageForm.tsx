@@ -1,12 +1,14 @@
+
 import { Dispatch } from "react";
 import { tipOptions } from "../data/tipOption";
+import { OrdenAction } from "../hooks/useOrdenReducer";
 
 type TipPorcentageFormProps = {
-    setTip: Dispatch<React.SetStateAction<number>>
-    tip: number
+    state: number
+    dispatch: Dispatch<OrdenAction>
 }
 
-export default function TipPorcentageForm({ setTip, tip }: TipPorcentageFormProps) {
+export default function TipPorcentageForm({ dispatch, state }: TipPorcentageFormProps) {
   return (
     <div className="mb-2">
         <h2 className="font-black text-2xl mb-2">Propinas:</h2>
@@ -16,8 +18,8 @@ export default function TipPorcentageForm({ setTip, tip }: TipPorcentageFormProp
                 <div key={ item.id } className="flex gap-1">
                     <label htmlFor={ item.id }>{ item.label }</label>
                     <input type="radio" name="tip" id={ item.id } value={ item.value }
-                          onChange={ (e) => setTip(+e.target.value) }
-                          checked={item.value === tip}
+                          onChange={ () => dispatch({ type: "tip", payload: { tip: item.value }})}
+                          checked={item.value === state}
                     />
                 </div>
             ))}
